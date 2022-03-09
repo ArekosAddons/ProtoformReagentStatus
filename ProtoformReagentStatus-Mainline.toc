@@ -1,0 +1,21 @@
+## Interface: 90200
+## Title: Protoform Reagent Status
+## Notes: Add information to Protoform Synthesis reagents
+## Version: 0.0.1
+
+## Author: Areko
+## SavedVariables: ProtoformReagentStatusDB
+#@do-not-package@
+## Dependencies: Ace3
+#@end-do-not-package@
+#@non-debug@
+# ## OptionalDeps: LibStub, CallbackHandler-1.0, Ace3
+
+# Libs/LibStub/LibStub.lua
+# Libs\AceLocale-3.0\AceLocale-3.0.xml
+#@end-non-debug@
+
+locales/enUS.lua
+locales/deDE.lua
+
+data.lua

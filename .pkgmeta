@@ -1,0 +1,12 @@
+
+externals:
+  Libs/LibStub: https://repos.wowace.com/wow/libstub/trunk
+  Libs/AceLocale-3.0: https://repos.curseforge.com/wow/ace3/trunk/AceLocale-3.0
+
+manual-changelog:
+  filename: RECENT_CHANGES.md
+  markup-type: markdown
+
+ignore:
+  - CHANGELOG.md
+  - ProtoformReagentStatus.toc
