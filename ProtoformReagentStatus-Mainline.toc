@@ -18,4 +18,9 @@
 locales/enUS.lua
 locales/deDE.lua
 
+util.lua
+
 data.lua
+tooltip.lua
+
+database.lua
