@@ -28,8 +28,10 @@ local function reevaluate_reagents()
             elseif C_PetJournal.GetPetInfoByItemID(itemID) then
                 ResultsDB[itemID] = RESULT_TYPES.PET
             else
+                --@debug@
                 local link = "|cFFFFFF00|Hitem:".. itemID .. "|h[" .. itemID .. "]|h|r"
                 print("[PRS] Recipe result of " .. link .. " is neither mount or pet.")
+                --@end-debug@
                 ResultsDB[itemID] = RESULT_TYPES.OTHER
             end
 

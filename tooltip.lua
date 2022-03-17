@@ -32,7 +32,6 @@ local PROTOFORM_SYNTHESIS_STRING, COLOUR_HEX, TAG do
 
         PROTOFORM_SYNTHESIS_STRING = _G[scanTooltipName .. "TextLeft2"]:GetText()
         if PROTOFORM_SYNTHESIS_STRING == nil then -- can be nil on fresh logging
-            -- PROTOFORM_SYNTHESIS_STRING = "|cFF66BBFFProtoform Synthesis|r" -- fallback
             return C_Timer.After(3, scan)
         end
         COLOUR_HEX = PROTOFORM_SYNTHESIS_STRING:match("(|c%x%x%x%x%x%x%x%x)") or "|cFF66BBFF"
@@ -290,7 +289,7 @@ end, true)
 
 local function render_title(tooltip, resultType, owend, available)
     -- Title (2/3)
-    local title = L[resultType] or resultType
+    local title = L["TYPE_" .. resultType] or resultType
     tooltip:AddLine(string.format("%s%s|r (|cFFFFFFFF%d|r/|cFFFFFFFF%d|r)", COLOUR_HEX, title, owend, available))
 end
 
@@ -331,36 +330,36 @@ local RENDERS = {
     [DISPALY_TYPES.MOTE] = function(tooltip, data)
         local mounts, pets1, pets2, pets3, others = get_mote_usage(data)
 
-        tooltip:AddLine(string.format("%s: Needed amounts", TAG), 1, 1, 1)
+        tooltip:AddLine(string.format(L.NEEDED_MOTES_S, TAG), 1, 1, 1)
 
         local hasAnyNeed = false
         if mounts > 0 then
             hasAnyNeed = true
-            tooltip:AddLine(string.format("Mounts: %d", mounts), 1, 1, 1)
+            tooltip:AddLine(string.format(L.MOUNTS_D, mounts), 1, 1, 1)
             tooltip:AddTexture(MOUNT_ICON, TEXTUREINFO)
         end
         if pets1 > 0 then
             hasAnyNeed = true
-            tooltip:AddLine(string.format("First pet: %d", pets1), 1, 1, 1)
+            tooltip:AddLine(string.format(L.FIRST_PETS_D, pets1), 1, 1, 1)
             tooltip:AddTexture(PET_ICON, TEXTUREINFO)
         end
         if pets2 > 0 then
             hasAnyNeed = true
-            tooltip:AddLine(string.format("Second pet: %d", pets2), 1, 1, 1)
+            tooltip:AddLine(string.format(L.SECOND_PETS_D, pets2), 1, 1, 1)
             tooltip:AddTexture(PET_ICON, TEXTUREINFO)
         end
         if pets3 > 0 then
             hasAnyNeed = true
-            tooltip:AddLine(string.format("Third pet: %d", pets3), 1, 1, 1)
+            tooltip:AddLine(string.format(L.THIRD_PETS_D, pets3), 1, 1, 1)
             tooltip:AddTexture(PET_ICON, TEXTUREINFO)
         end
         if others > 0 then
             hasAnyNeed = true
-            tooltip:AddLine(string.format("Others: %d", pets3), 1, 1, 1)
+            tooltip:AddLine(string.format(L.OTHERS_D, pets3), 1, 1, 1)
         end
 
         if not hasAnyNeed then
-            tooltip:AddLine("No known need.", 1, 1, 1)
+            tooltip:AddLine(L.MOTES_NO_NEED, 1, 1, 1)
         end
     end,
     [DISPALY_TYPES.SOUL] = soul_and_latice_render,
@@ -376,7 +375,7 @@ local function onTooltip(tooltip, link)
 
     local data = ReagentsDB[id]
     if next(data) == nil then
-        tooltip:AddLine(string.format("%s: No known recipe for this reagent", TAG), 1, 1, 1)
+        tooltip:AddLine(string.format(L.NO_KNOWN_RECIPE_S, TAG), 1, 1, 1)
     else
         RENDERS[style](tooltip, data)
     end
