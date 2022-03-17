@@ -16,7 +16,7 @@ local DISPALY_TYPES = {
     NONE    = 0,
     MOTE    = 1,
     SOUL    = 2,
-    LATICE  = 3,
+    LATTICE  = 3,
 }
 
 local scanTooltip = CreateFrame("GameTooltip", ADDONNAME .. "Tooltip", nil, "SharedTooltipTemplate")
@@ -83,7 +83,7 @@ local get_display_style, clear_style_cache do
                 if quality == RareQuality then
                     style = DISPALY_TYPES.SOUL
                 else
-                    style = DISPALY_TYPES.LATICE
+                    style = DISPALY_TYPES.LATTICE
                 end
             end
         end
@@ -301,7 +301,7 @@ local function render_items(tooltip, data)
 end
 
 
-local function soul_and_latice_render(tooltip, data)
+local function soul_and_lattice_render(tooltip, data)
     local mounts, pets, others = get_use_list(data)
 
     if #mounts > 0 then
@@ -362,8 +362,8 @@ local RENDERS = {
             tooltip:AddLine(L.MOTES_NO_NEED, 1, 1, 1)
         end
     end,
-    [DISPALY_TYPES.SOUL] = soul_and_latice_render,
-    [DISPALY_TYPES.LATICE] = soul_and_latice_render,
+    [DISPALY_TYPES.SOUL] = soul_and_lattice_render,
+    [DISPALY_TYPES.LATTICE] = soul_and_lattice_render,
 }
 
 local function onTooltip(tooltip, link)
