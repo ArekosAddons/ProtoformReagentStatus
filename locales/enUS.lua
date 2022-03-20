@@ -11,6 +11,8 @@ L.TYPE_OTHER = "Others"
 L.TYPE_MOUNT = _G.MOUNTS
 L.TYPE_PET = _G.PETS
 
+L.REAGENT_STATUS = "Reagent status"
+
 L.NEEDED_MOTES_S = "%s: Needed amounts"
 L.MOUNTS_D = "Mounts: %d"
 L.FIRST_PETS_D = "First pets: %d"

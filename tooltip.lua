@@ -35,7 +35,7 @@ local PROTOFORM_SYNTHESIS_STRING, COLOUR_HEX, TAG do
             return C_Timer.After(3, scan)
         end
         COLOUR_HEX = PROTOFORM_SYNTHESIS_STRING:match("(|c%x%x%x%x%x%x%x%x)") or "|cFF66BBFF"
-        TAG = COLOUR_HEX .. "Reagent status|r"
+        TAG = COLOUR_HEX .. L.REAGENT_STATUS .. "|r"
     end
 
     item:ContinueOnItemLoad(scan)
