@@ -11,18 +11,20 @@ L.TYPE_OTHER = "Anderes"
 L.TYPE_MOUNT = _G.MOUNTS
 L.TYPE_PET = _G.PETS
 
--- L.NEEDED_MOTES_S =  "%s: Needed amounts"
--- L.MOUNTS_D =  "Mounts: %d"
--- L.FIRST_PETS_D =  "First pets: %d"
--- L.SECOND_PETS_D =  "Second pets: %d"
--- L.THIRD_PETS_D =  "Third pets: %d"
--- L.OTHERS_D =  "Others: %d"
+L.REAGENT_STATUS = "Reagenz Status"
 
--- L.MOTES_NO_NEED =  "No known need"
+L.NEEDED_MOTES_S =  "%s: Noch benötigte menge"
+L.MOUNTS_D =  "Reittiere: %d"
+L.FIRST_PETS_D =  "Erstes Haustier: %d"
+L.SECOND_PETS_D =  "Zweites Haustier: %d"
+L.THIRD_PETS_D =  "Drittes Haustier: %d"
+L.OTHERS_D =  "Anderes: %d"
 
--- L.NO_KNOWN_RECIPE_S =  "%s: No known recipe for this reagent"
+L.MOTES_NO_NEED =  "Keine bekannter Bedarf"
+
+L.NO_KNOWN_RECIPE_S =  "%s: Kein bekanntes Rezept für dieses Reagenz"
 
 L.COLLECTED = "|cFF00FF00Eingesammelt|r"
-L.MISSING = "|cFFFF0000Fehltr"
+L.MISSING = "|cFFFF0000Fehlt|r"
 L.PET_COLLECTED_DD = "|cFF00FF00%d/%d|r"
 L.PET_MISSING_DD = "|cFFFF0000%d/%d|r"
