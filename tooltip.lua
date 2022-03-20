@@ -166,6 +166,7 @@ local get_mote_usage, clear_mote_cache do
 end
 
 local get_use_list, clear_list_cache do
+    local NAME_SS = "%s (%s|T4287471:0|t)" -- 4287471: inv_progenitor_protoformsynthesis
     local cache = {}
     local isScheduleActive = false
 
@@ -178,8 +179,16 @@ local get_use_list, clear_list_cache do
               { o = 0, l = 0, },
               { o = 0, l = 0, }
 
+        local motes = ReagentsDB[GENESIS_MOTE_ITEM_ID]
+
         for itemID in pairs(data) do
             local resultType = ResultsDB[itemID]
+            local cost = motes[itemID] or "?"
+            local quality = C_Item.GetItemQualityByID(itemID)
+            if not quality then
+                scheduleCacheClear = true
+                quality = 0
+            end
 
             if resultType == RESULT_TYPES.MOUNT then
                 local _, name, icon, isCollected = get_mount_info(itemID)
@@ -191,11 +200,6 @@ local get_use_list, clear_list_cache do
                     scheduleCacheClear = true
                     icon = QUESTIONMARK_ICON
                 end
-                local quality = C_Item.GetItemQualityByID(itemID)
-                if not quality then
-                    scheduleCacheClear = true
-                    quality = 0
-                end
 
                 local state = L.MISSING
                 if isCollected then
@@ -206,13 +210,12 @@ local get_use_list, clear_list_cache do
                 mounts.l = mounts.l + 1
 
                 mounts[#mounts + 1] = {
-                    ITEM_QUALITY_COLORS[quality].hex .. "[" .. name .. "]|r",
+                    string.format(NAME_SS, ITEM_QUALITY_COLORS[quality].hex .. "[" .. name .. "]|r", cost),
                     state,
                     icon
                 }
             elseif resultType == RESULT_TYPES.PET then
                 local _, name, icon, numCollected, l = get_pet_info(itemID)
-                local quality = C_Item.GetItemQualityByID(itemID)
                 if not name then
                     scheduleCacheClear = true
                     name = RETRIEVING_DATA
@@ -220,10 +223,6 @@ local get_use_list, clear_list_cache do
                 if not icon then
                     scheduleCacheClear = true
                     icon = QUESTIONMARK_ICON
-                end
-                if not quality then
-                    scheduleCacheClear = true
-                    quality = 0
                 end
 
                 local state
@@ -237,7 +236,7 @@ local get_use_list, clear_list_cache do
                 pets.l = pets.l + 1
 
                 pets[#pets + 1] = {
-                    ITEM_QUALITY_COLORS[quality].hex .. "[" .. name .. "]|r",
+                    string.format(NAME_SS, ITEM_QUALITY_COLORS[quality].hex .. "[" .. name .. "]|r", cost),
                     state,
                     icon
                 }
@@ -261,7 +260,7 @@ local get_use_list, clear_list_cache do
                 end
                 other.l = other.l + 1
 
-                other[#other + 1] = { link, state, icon }
+                other[#other + 1] = { string.format(NAME_SS, link, cost), state, icon }
             end
         end
 
