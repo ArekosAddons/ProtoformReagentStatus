@@ -39,6 +39,7 @@ read_globals = {
     "CreateFrame",
 
     "C_Item.GetItemQualityByID",
+    "C_Item.RequestLoadItemDataByID",
     "GetItemCount",
     "GetItemInfo",
 
@@ -47,6 +48,7 @@ read_globals = {
 
     "C_PetJournal.GetNumCollectedInfo",
     "C_PetJournal.GetPetInfoByItemID",
+    "C_PetJournal.GetPetInfoByPetID",
 
     "C_TradeSkillUI.GetAllRecipeIDs",
     "C_TradeSkillUI.GetRecipeItemLink",
