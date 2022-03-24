@@ -69,6 +69,12 @@ local function new_pet_added(event, petID)
     end
 end
 
+local function preload()
+     -- pre-cache item data
+    for itemID in pairs(ResultsDB) do
+        C_Item.RequestLoadItemDataByID(itemID)
+    end
+end
 
 ns.RegisterEvent("OnDatabaseLoaded", function(event, db)
     ResultsDB = db.global.results
@@ -76,10 +82,7 @@ ns.RegisterEvent("OnDatabaseLoaded", function(event, db)
     ns.RegisterEvent("NEW_MOUNT_ADDED", new_mount_added)
     ns.RegisterEvent("NEW_PET_ADDED", new_pet_added)
 
-    -- pre-cache item data
-    for itemID in pairs(ResultsDB) do
-        C_Item.RequestLoadItemDataByID(itemID)
-    end
+   C_Timer.After(1, preload)
 
     return true
 end, true)

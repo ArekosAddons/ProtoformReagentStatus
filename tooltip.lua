@@ -23,22 +23,25 @@ local scanTooltip = CreateFrame("GameTooltip", ADDONNAME .. "Tooltip", nil, "Sha
 local scanTooltipName = scanTooltip:GetName()
 scanTooltip:SetOwner(WorldFrame, "ANCHOR_NONE")
 
-local PROTOFORM_SYNTHESIS_STRING, COLOUR_HEX, TAG do
-    local item = Item:CreateFromItemID(GENESIS_MOTE_ITEM_ID)
-
+local start_scan, PROTOFORM_SYNTHESIS_STRING, COLOUR_HEX, TAG do
     local function scan()
         scanTooltip:ClearLines()
         scanTooltip:SetItemByID(GENESIS_MOTE_ITEM_ID)
 
         PROTOFORM_SYNTHESIS_STRING = _G[scanTooltipName .. "TextLeft2"]:GetText()
         if PROTOFORM_SYNTHESIS_STRING == nil then -- can be nil on fresh logging
+            scanTooltip:ClearLines()
+            print("[PRS] String is nil")
             return C_Timer.After(3, scan)
         end
         COLOUR_HEX = PROTOFORM_SYNTHESIS_STRING:match("(|c%x%x%x%x%x%x%x%x)") or "|cFF66BBFF"
         TAG = COLOUR_HEX .. L.REAGENT_STATUS .. "|r"
     end
 
-    item:ContinueOnItemLoad(scan)
+    function start_scan()
+        local item = Item:CreateFromItemID(GENESIS_MOTE_ITEM_ID)
+        item:ContinueOnItemLoad(scan)
+    end
 end
 
 local ReagentsDB
@@ -450,7 +453,8 @@ ns.RegisterEvent("OnDatabaseLoaded", function(event, db)
     ReagentsDB = db.global.reagents
     ResultsDB = db.global.results
 
-    add_hooks()
+    start_scan()
+    C_Timer.After(1, add_hooks)
 
     return true
 end, true)
