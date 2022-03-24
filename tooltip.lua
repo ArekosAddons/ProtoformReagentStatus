@@ -31,7 +31,9 @@ local start_scan, PROTOFORM_SYNTHESIS_STRING, COLOUR_HEX, TAG do
         PROTOFORM_SYNTHESIS_STRING = _G[scanTooltipName .. "TextLeft2"]:GetText()
         if PROTOFORM_SYNTHESIS_STRING == nil then -- can be nil on fresh logging
             scanTooltip:ClearLines()
+            --@debug@
             print("[PRS] String is nil")
+            --@end-debug@
             return C_Timer.After(3, scan)
         end
         COLOUR_HEX = PROTOFORM_SYNTHESIS_STRING:match("(|c%x%x%x%x%x%x%x%x)") or "|cFF66BBFF"

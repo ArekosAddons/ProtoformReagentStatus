@@ -344,7 +344,7 @@ ns.RegisterEvent("ADDON_LOADED", function(event, addonName)
 
             global.version = 1
         end
-        DATA = nil -- safe memory
+        DATA = nil -- clear memory
 
         ns.FireEvent("OnDatabaseLoaded", db)
         return true
