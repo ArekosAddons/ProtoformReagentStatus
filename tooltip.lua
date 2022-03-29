@@ -24,25 +24,32 @@ local scanTooltipName = scanTooltip:GetName()
 scanTooltip:SetOwner(WorldFrame, "ANCHOR_NONE")
 
 local start_scan, PROTOFORM_SYNTHESIS_STRING, COLOUR_HEX, TAG do
+    local delay = 0
+
     local function scan()
         scanTooltip:ClearLines()
         scanTooltip:SetItemByID(GENESIS_MOTE_ITEM_ID)
 
         PROTOFORM_SYNTHESIS_STRING = _G[scanTooltipName .. "TextLeft2"]:GetText()
-        if PROTOFORM_SYNTHESIS_STRING == nil then -- can be nil on fresh logging
-            scanTooltip:ClearLines()
+        if PROTOFORM_SYNTHESIS_STRING == nil then
             --@debug@
             print("[PRS] String is nil")
             --@end-debug@
-            return C_Timer.After(3, scan)
+            delay = delay + 3
+            return C_Timer.After(delay, scan)
         end
         COLOUR_HEX = PROTOFORM_SYNTHESIS_STRING:match("(|c%x%x%x%x%x%x%x%x)") or "|cFF66BBFF"
         TAG = COLOUR_HEX .. L.REAGENT_STATUS .. "|r"
     end
 
+    local function delay_scan()
+        -- re-logging does not have the data on ContinueOnItemLoad, so delay for a second
+        C_Timer.After(1, scan)
+    end
+
     function start_scan()
         local item = Item:CreateFromItemID(GENESIS_MOTE_ITEM_ID)
-        item:ContinueOnItemLoad(scan)
+        item:ContinueOnItemLoad(delay_scan)
     end
 end
 
@@ -447,7 +454,7 @@ local function add_hooks()
     HookTooltip(ItemRefTooltip)
 
     --@debug@
-    print("[PRS] hooked tooltip after", delayCount, " |4delay:delays;")
+    print("[PRS] hooked tooltip after", delayCount, "|4delay:delays;")
     --@end-debug@
 end
 
@@ -456,7 +463,7 @@ ns.RegisterEvent("OnDatabaseLoaded", function(event, db)
     ResultsDB = db.global.results
 
     start_scan()
-    C_Timer.After(1, add_hooks)
+    C_Timer.After(2, add_hooks)
 
     return true
 end, true)
