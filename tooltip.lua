@@ -423,6 +423,7 @@ local HookTooltip do-- HookTooltip
         hooksecurefunc(tooltip, "SetInventoryItem", SetXItem)
         hooksecurefunc(tooltip, "SetInventoryItemByID", SetXItem)
         hooksecurefunc(tooltip, "SetItemKey", SetXItem)
+        hooksecurefunc(tooltip, "SetItemByID", SetXItem)
         hooksecurefunc(tooltip, "SetLootItem", SetXItem)
         hooksecurefunc(tooltip, "SetLootRollItem", SetXItem)
         hooksecurefunc(tooltip, "SetMerchantCostItem", SetXItem)
