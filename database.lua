@@ -282,8 +282,8 @@ local DATA = {
 
 --@debug@
 -- collects data for the DATA table
-ns.RegisterEvent("OnDatabaseLoaded", function(_, _db)
-    local global = _db.global
+ns.RegisterEvent("OnDatabaseLoaded", function(_, database)
+    local global = database.global
     local output = {}
 
     for _, value in pairs(ns.RESULT_TYPES) do
@@ -344,7 +344,7 @@ ns.RegisterEvent("ADDON_LOADED", function(event, addonName)
 
             global.version = 1
         end
-        DATA = nil -- clear memory
+        DATA = nil -- mark as unused
 
         ns.FireEvent("OnDatabaseLoaded", db)
         return true
