@@ -5,6 +5,8 @@
 
 ## Author: Areko
 ## SavedVariables: ProtoformReagentStatusDB
+## LoadManagers: AddonLoader
+## X-LoadOn-Always: delayed
 #@do-not-package@
 ## Dependencies: Ace3
 #@end-do-not-package@
