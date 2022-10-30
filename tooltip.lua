@@ -19,6 +19,7 @@ local DISPALY_TYPES = {
     LATTICE  = 3,
 }
 
+-- TODO: new tooltip system already here?
 local scanTooltip = CreateFrame("GameTooltip", ADDONNAME .. "Tooltip", nil, "SharedTooltipTemplate")
 local scanTooltipName = scanTooltip:GetName()
 scanTooltip:SetOwner(WorldFrame, "ANCHOR_NONE")
@@ -394,19 +395,21 @@ local function onTooltip(tooltip, link)
 end
 
 
-local HookTooltip do-- HookTooltip
+local HookTooltip, HookGameTooltip_Extarnals do-- HookTooltip
     local hooked = {}
 
     local function SetXItem(self)
         local _, link = self:GetItem()
         onTooltip(self, link)
     end
-    local function SetRecipeResultItem(self, recipeID)
-        local link = C_TradeSkillUI.GetRecipeItemLink(recipeID)
-        onTooltip(self, link)
+    local function SetTooltipRecipeResultItem()
+        local tooltip = GameTooltip
+
+        local _, link = tooltip:GetItem()
+        onTooltip(tooltip, link)
     end
     local function SetRecipeReagentItem(self, recipeID, index)
-        local link = C_TradeSkillUI.GetRecipeReagentItemLink(recipeID, index)
+        local link = C_TradeSkillUI.GetRecipeFixedReagentItemLink(recipeID, index)
         onTooltip(self, link)
     end
 
@@ -430,12 +433,13 @@ local HookTooltip do-- HookTooltip
         hooksecurefunc(tooltip, "SetMerchantItem", SetXItem)
         hooksecurefunc(tooltip, "SetOwnedItemByID", SetXItem)
         hooksecurefunc(tooltip, "SetRecipeReagentItem", SetRecipeReagentItem)
-        hooksecurefunc(tooltip, "SetRecipeResultItem", SetRecipeResultItem)
         hooksecurefunc(tooltip, "SetSendMailItem", SetXItem)
         hooksecurefunc(tooltip, "SetTradePlayerItem", SetXItem)
         hooksecurefunc(tooltip, "SetTradeTargetItem", SetXItem)
+    end
 
-        -- GameTooltip:HookScript("OnTooltipSetItem")
+    function HookGameTooltip_Extarnals()
+        hooksecurefunc(C_TradeSkillUI, "SetTooltipRecipeResultItem", SetTooltipRecipeResultItem)
     end
 end
 
@@ -452,6 +456,7 @@ local function add_hooks()
     end
 
     HookTooltip(GameTooltip)
+    HookGameTooltip_Extarnals()
     HookTooltip(ItemRefTooltip)
 
     --@debug@

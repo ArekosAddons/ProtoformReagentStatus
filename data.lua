@@ -16,12 +16,12 @@ local ReagentsDB -- luacheck: ignore 331/ReagentsDB
 local ResultsDB -- luacheck: ignore 331/ResultsDB
 
 local function reevaluate_reagents()
-    if C_TradeSkillUI.GetTradeSkillLine() ~= TRADE_SKILL_LINE_ID then return end
+    if C_TradeSkillUI.GetBaseProfessionInfo().professionID ~= TRADE_SKILL_LINE_ID then return end
 
     for recipeID, _ in pairs(RecipesDB) do
-        local itemLink = C_TradeSkillUI.GetRecipeItemLink(recipeID)
-        local itemID = tonumber(itemLink and itemLink:match("item:(%d+)"))
+        local recipeSchematic = C_TradeSkillUI.GetRecipeSchematic(recipeID, false)
 
+        local itemID = recipeSchematic.outputItemID
         if itemID then -- can only be one of pet or mount but not both
             if C_MountJournal.GetMountFromItem(itemID) then
                 ResultsDB[itemID] = RESULT_TYPES.MOUNT
@@ -35,20 +35,12 @@ local function reevaluate_reagents()
                 ResultsDB[itemID] = RESULT_TYPES.OTHER
             end
 
-            local numReagents = C_TradeSkillUI.GetRecipeNumReagents(recipeID) or 0
-
-            for i=1, numReagents do
-                local link = C_TradeSkillUI.GetRecipeReagentItemLink(recipeID, i)
-                local reagentItemID = tonumber(link and link:match("item:(%d+)"))
+            for _, reagentSchematic in pairs(recipeSchematic.reagentSlotSchematics) do
+                local reagentCount = reagentSchematic.quantityRequired
+                local reagentItemID = reagentSchematic.reagents[1]
 
                 if reagentItemID then
-                    local _, _, reagentCount = C_TradeSkillUI.GetRecipeReagentInfo(recipeID, i)
-
                     ReagentsDB[reagentItemID][itemID] = reagentCount
-                --@debug@
-                else
-                    print("[PRS] Failed to lookup reagent#" ..  i .. " for recipeID:", recipeID)
-                --@end-debug@
                 end
             end
         end
@@ -58,7 +50,7 @@ local function reevaluate_reagents()
 end
 
 local function get_all_recipeIDs()
-    if C_TradeSkillUI.GetTradeSkillLine() ~= TRADE_SKILL_LINE_ID then return end
+    if C_TradeSkillUI.GetBaseProfessionInfo().professionID ~= TRADE_SKILL_LINE_ID then return end
     local hasChanges = false
 
     local recipeIDs = C_TradeSkillUI.GetAllRecipeIDs()
@@ -84,7 +76,7 @@ ns.RegisterEvent("OnDatabaseLoaded", function(event, db)
     ResultsDB = db.global.results
 
     ns.RegisterEvent("TRADE_SKILL_SHOW", function()
-        if C_TradeSkillUI.GetTradeSkillLine() ~= TRADE_SKILL_LINE_ID then return end
+        if C_TradeSkillUI.GetBaseProfessionInfo().professionID ~= TRADE_SKILL_LINE_ID then return end
 
         C_Timer.After(1, get_all_recipeIDs)
     end)
