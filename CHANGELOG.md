@@ -7,7 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [0.3.0] - 2022-08-18
 ### Added
  - Support for Dragonflight
- - Update TOC for patch 9.2.7
+ - Update TOC for patch 10.0.0
 
 ## [0.2.4] - 2022-08-18
 ### Added
