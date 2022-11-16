@@ -1,7 +1,7 @@
 ## Interface: 100002
 ## Title: Protoform Reagent Status
 ## Notes: Add information to Protoform Synthesis reagents
-## Version: 0.3.0
+## Version: 0.3.1
 
 ## Author: Areko
 ## SavedVariables: ProtoformReagentStatusDB
