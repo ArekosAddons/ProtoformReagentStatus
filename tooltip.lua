@@ -19,19 +19,20 @@ local DISPALY_TYPES = {
     LATTICE  = 3,
 }
 
--- TODO: new tooltip system already here?
-local scanTooltip = CreateFrame("GameTooltip", ADDONNAME .. "Tooltip", nil, "SharedTooltipTemplate")
-local scanTooltipName = scanTooltip:GetName()
-scanTooltip:SetOwner(WorldFrame, "ANCHOR_NONE")
+local function get_reagent_type(itemID)
+    local data = C_TooltipInfo.GetItemByID(GENESIS_MOTE_ITEM_ID)
+
+    local line2 = data.lines[2]
+    TooltipUtil.SurfaceArgs(line2)
+
+    return line2.leftText
+end
 
 local start_scan, PROTOFORM_SYNTHESIS_STRING, COLOUR_HEX, TAG do
     local delay = 0
 
     local function scan()
-        scanTooltip:ClearLines()
-        scanTooltip:SetItemByID(GENESIS_MOTE_ITEM_ID)
-
-        PROTOFORM_SYNTHESIS_STRING = _G[scanTooltipName .. "TextLeft2"]:GetText()
+        PROTOFORM_SYNTHESIS_STRING = get_reagent_type(GENESIS_MOTE_ITEM_ID)
         if PROTOFORM_SYNTHESIS_STRING == nil then
             --@debug@
             print("[PRS] String is nil")
@@ -89,10 +90,7 @@ local get_display_style, clear_style_cache do
             = GetItemInfo(id)
 
         if isCraftingReagent then
-            scanTooltip:ClearLines()
-            scanTooltip:SetItemByID(id)
-
-            if _G[scanTooltipName .. "TextLeft2"]:GetText() == PROTOFORM_SYNTHESIS_STRING then
+            if get_reagent_type(id) == PROTOFORM_SYNTHESIS_STRING then
                 if quality == RareQuality then
                     style = DISPALY_TYPES.SOUL
                 else
@@ -419,7 +417,7 @@ local HookTooltip, HookGameTooltip_Extarnals do-- HookTooltip
 
         hooksecurefunc(tooltip, "SetBagItem", SetXItem)
         hooksecurefunc(tooltip, "SetBuybackItem", SetXItem)
-        hooksecurefunc(tooltip, "SetCompareItem", SetXItem)
+        -- hooksecurefunc(tooltip, "SetCompareItem", SetXItem)
         hooksecurefunc(tooltip, "SetGuildBankItem", SetXItem)
         hooksecurefunc(tooltip, "SetHyperlink", SetXItem)
         hooksecurefunc(tooltip, "SetInboxItem", SetXItem)
@@ -439,7 +437,8 @@ local HookTooltip, HookGameTooltip_Extarnals do-- HookTooltip
     end
 
     function HookGameTooltip_Extarnals()
-        hooksecurefunc(C_TradeSkillUI, "SetTooltipRecipeResultItem", SetTooltipRecipeResultItem)
+        -- hooksecurefunc(C_TradeSkillUI, "SetTooltipRecipeResultItem", SetTooltipRecipeResultItem)
+        -- TODO: update
     end
 end
 
@@ -447,6 +446,7 @@ end
 local delayCount = 0
 --@end-debug@
 local function add_hooks()
+    -- TODO: check if still needed tooltip data seems now be instant
     if not PROTOFORM_SYNTHESIS_STRING then
         -- delay hooking until we have the protoform string
         --@debug@
