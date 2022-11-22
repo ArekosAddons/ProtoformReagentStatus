@@ -20,7 +20,7 @@ local DISPALY_TYPES = {
 }
 
 local function get_reagent_type(itemID)
-    local data = C_TooltipInfo.GetItemByID(GENESIS_MOTE_ITEM_ID)
+    local data = C_TooltipInfo.GetItemByID(itemID)
 
     local line2 = data.lines[2]
     TooltipUtil.SurfaceArgs(line2)
@@ -376,69 +376,30 @@ local RENDERS = {
     [DISPALY_TYPES.LATTICE] = soul_and_lattice_render,
 }
 
-local function onTooltip(tooltip, link)
-    local id = tonumber(link and link:match("item:(%d+)"))
-    if not id then return end
+local AddPostCallTooltipCallback do-- Handle tooltip item
+    local supportedTooltips = {
+        [GameTooltip] = true,
+        [ItemRefTooltip] = true,
+    }
 
-    local style = get_display_style(id)
-    if style == DISPALY_TYPES.NONE then return end
+    function AddPostCallTooltipCallback()
+        TooltipDataProcessor.AddTooltipPostCall(Enum.TooltipDataType.Item, function(tooltip, tooltipData)
+            if not supportedTooltips[tooltip] then return end
 
-    local data = ReagentsDB[id]
-    if next(data) == nil then
-        tooltip:AddLine(string.format(L.NO_KNOWN_RECIPE_S, TAG), 1, 1, 1)
-    else
-        RENDERS[style](tooltip, data)
-    end
-    tooltip:Show()
-end
+            local id = tooltipData.id
+            if not id then return end
 
+            local style = get_display_style(id)
+            if style == DISPALY_TYPES.NONE then return end
 
-local HookTooltip, HookGameTooltip_Extarnals do-- HookTooltip
-    local hooked = {}
-
-    local function SetXItem(self)
-        local _, link = self:GetItem()
-        onTooltip(self, link)
-    end
-    local function SetTooltipRecipeResultItem()
-        local tooltip = GameTooltip
-
-        local _, link = tooltip:GetItem()
-        onTooltip(tooltip, link)
-    end
-    local function SetRecipeReagentItem(self, recipeID, index)
-        local link = C_TradeSkillUI.GetRecipeFixedReagentItemLink(recipeID, index)
-        onTooltip(self, link)
-    end
-
-    function HookTooltip(tooltip)
-        if hooked[tooltip] then return end
-        hooked[tooltip] = true
-
-        hooksecurefunc(tooltip, "SetBagItem", SetXItem)
-        hooksecurefunc(tooltip, "SetBuybackItem", SetXItem)
-        -- hooksecurefunc(tooltip, "SetCompareItem", SetXItem)
-        hooksecurefunc(tooltip, "SetGuildBankItem", SetXItem)
-        hooksecurefunc(tooltip, "SetHyperlink", SetXItem)
-        hooksecurefunc(tooltip, "SetInboxItem", SetXItem)
-        hooksecurefunc(tooltip, "SetInventoryItem", SetXItem)
-        hooksecurefunc(tooltip, "SetInventoryItemByID", SetXItem)
-        hooksecurefunc(tooltip, "SetItemKey", SetXItem)
-        hooksecurefunc(tooltip, "SetItemByID", SetXItem)
-        hooksecurefunc(tooltip, "SetLootItem", SetXItem)
-        hooksecurefunc(tooltip, "SetLootRollItem", SetXItem)
-        hooksecurefunc(tooltip, "SetMerchantCostItem", SetXItem)
-        hooksecurefunc(tooltip, "SetMerchantItem", SetXItem)
-        hooksecurefunc(tooltip, "SetOwnedItemByID", SetXItem)
-        hooksecurefunc(tooltip, "SetRecipeReagentItem", SetRecipeReagentItem)
-        hooksecurefunc(tooltip, "SetSendMailItem", SetXItem)
-        hooksecurefunc(tooltip, "SetTradePlayerItem", SetXItem)
-        hooksecurefunc(tooltip, "SetTradeTargetItem", SetXItem)
-    end
-
-    function HookGameTooltip_Extarnals()
-        -- hooksecurefunc(C_TradeSkillUI, "SetTooltipRecipeResultItem", SetTooltipRecipeResultItem)
-        -- TODO: update
+            local data = ReagentsDB[id]
+            if next(data) == nil then
+                tooltip:AddLine(string.format(L.NO_KNOWN_RECIPE_S, TAG), 1, 1, 1)
+            else
+                RENDERS[style](tooltip, data)
+            end
+            tooltip:Show()
+        end)
     end
 end
 
@@ -455,9 +416,7 @@ local function add_hooks()
         return C_Timer.After(1.5, add_hooks)
     end
 
-    HookTooltip(GameTooltip)
-    HookGameTooltip_Extarnals()
-    HookTooltip(ItemRefTooltip)
+    AddPostCallTooltipCallback()
 
     --@debug@
     print("[PRS] hooked tooltip after", delayCount, "|4delay:delays;")
