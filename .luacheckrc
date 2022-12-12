@@ -61,5 +61,6 @@ read_globals = {
 
     -- WoW Lua API
     "hooksecurefunc",
+    "securecallfunction",
     "wipe",
 }

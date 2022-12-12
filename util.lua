@@ -11,12 +11,12 @@ do-- Event handling
     })
 
     local function call_callbacks(callbacks, event, ...)
-        local xpcall, CallErrorHandler = xpcall, CallErrorHandler
+        local securecallfunction = securecallfunction
 
         for callback in pairs(callbacks) do
-            local success, clear = xpcall(callback, CallErrorHandler, event, ...)
+            local clear = securecallfunction(callback, event, ...)
 
-            if success and clear then
+            if clear then
                 callbacks[callback] = nil
             end
         end
@@ -24,7 +24,7 @@ do-- Event handling
 
     ns.RegisterEvent = function(event, callback, skipRegisterEvent)
         if not skipRegisterEvent then
-            xpcall(frame.RegisterEvent, CallErrorHandler, frame, event)
+            securecallfunction(frame.RegisterEvent, frame, event)
         end
 
         events[event][callback] = true
