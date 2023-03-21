@@ -1,4 +1,4 @@
-## Interface: 100005
+## Interface: 100007
 ## Title: Protoform Reagent Status
 ## Notes: Add information to Protoform Synthesis reagents
 ## Version: 0.4.1
